@@ -1,0 +1,33 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Restaurant Menu Application for Udacity FSND</title>
+  <meta name="description" content="Menu App">
+  <meta name="author" content="Terence Fox">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <!-- <script src="js/scripts.js"></script>-->
+  <div class="container">
+    <div>
+    <h1>Edit Restaurant Name</h1>
+    <form method="POST" action="{{url_for('editRestaurant', restaurant_id=restaurant.id)}}">
+      <input type="text" name="name" placeholder="{{restaurant.name}}">
+      <input type="submit" value="Change">
+    </form>
+    <p>
+      <a href="{{url_for('showMenu', restaurant_id=restaurant.id)}}"><input type="button" value="Cancel"></a>
+    </p>
+    </div>
+  </div>
+</body>
+</html>

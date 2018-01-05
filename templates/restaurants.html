@@ -1,0 +1,41 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Restaurants</title>
+  <meta name="description" content="Menu App">
+  <meta name="author" content="Terence Fox">
+
+  <link rel=stylesheet type=text/css href="{{url_for('static', filename='styles.css')}}">
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <!-- <script src="js/scripts.js"></script>-->
+  <div class="container">
+    <div>
+      <h1>Restaurants</h1>
+      <p>Message flashing goes here</p>
+    </div>
+    {% if restaurants == [] %}
+    <div>
+      <p>There are no restaurants stored.</p>
+    </div>
+    {% else %}
+    <div>
+      {% for i in restaurants %}
+      <p><a href="{{url_for('showMenu', restaurant_id = i.id)}}">{{i.name}}</a></p>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div>
+      <a href="{{url_for('newRestaurant')}}"><button>Create New</button></a>
+    </div>
+  </div>
+</body>
+</html>

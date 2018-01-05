@@ -1,0 +1,18 @@
+{
+  "logger": {
+    "title": "Remote Sync"
+  },
+  "uploadOnSave": false,
+  "useAtomicWrites": false,
+  "deleteLocal": false,
+  "port": "22",
+  "target": "/home/media/menu",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "username": "media",
+  "password": " ",
+  "watch": [],
+  "transport": "scp"
+}
