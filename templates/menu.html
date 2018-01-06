@@ -8,7 +8,7 @@
   <meta name="description" content="Menu App">
   <meta name="author" content="Terence Fox">
 
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/styles.css') }}">
 
   <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
@@ -16,10 +16,13 @@
 </head>
 <body>
   <div class="container">
-    <div>
+    <div class="header">
       <h1>{{restaurant.name}}</h1>
-      <a href="{{url_for('editRestaurant', restaurant_id=restaurant.id)}}">Edit</a>&nbsp;&nbsp;<a href="{{url_for('deleteRestaurant', restaurant_id=restaurant.id)}}">Delete</a>
       <p>Message flashing goes here</p>
+      <div class='edit_button_group'>
+        <input class="edit_button button" type="button" onclick="window.location.href='{{url_for('editRestaurant', restaurant_id=restaurant.id)}}'">
+        <input class=" delete_button button" type="button" onclick="window.location.href='{{url_for('deleteRestaurant', restaurant_id=restaurant.id)}}'">
+      </div>
     </div>
 
     {% if items == [] %}
@@ -28,18 +31,23 @@
     </div>
     {% else %}
     {% for i in items %}
-    <div>
-      <h3>{{i.name}}</h3>
-      <p>{{i.description}}</p>
-      <p>{{i.price}}</p>
-      <p>{{i.course}}</p>
-      <a href="{{url_for('editMenuItem',restaurant_id=restaurant.id, menu_id=i.id)}}">Edit</a>&nbsp;&nbsp;<a href="{{url_for('deleteMenuItem',restaurant_id=restaurant.id, menu_id=i.id)}}">Delete</a>
+    <div class="menu_item">
+      <h2>{{i.name}}</h2>
+      <hr>
+      <ul>
+        <li>{{i.course}}</li>
+        <li>{{i.description}}</li>
+        <li>{{i.price}}</li>
+      </ul>
+      <div class='edit_button_group'>
+        <input class="edit_button button" type="button" onclick="window.location.href='{{url_for('editMenuItem',restaurant_id=restaurant.id, menu_id=i.id)}}'">
+        <input class=" delete_button button" type="button" onclick="window.location.href='{{url_for('deleteMenuItem',restaurant_id=restaurant.id, menu_id=i.id)}}'">
+      </div>
     </div>
     {% endfor %}
     {% endif %}
-
-    <div>
-    <a href="{{url_for('newMenuItem', restaurant_id=restaurant.id)}}"><button>Create New Item</button></a>
+    <div class="footer">
+    <a href="{{url_for('newMenuItem', restaurant_id=restaurant.id)}}"><button class="button">NEW ITEM</button></a>
     </div>
   </div>
 </body>

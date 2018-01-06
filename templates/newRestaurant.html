@@ -8,7 +8,7 @@
   <meta name="description" content="Menu App">
   <meta name="author" content="Terence Fox">
 
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/styles.css') }}">
 
   <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
@@ -20,13 +20,15 @@
   <div class="container">
     <div>
     <h1>Create New Restaurant</h1>
-    <form method="POST" action="{{url_for('newRestaurant')}}">
+    <form class="edit_field" method="POST" action="{{url_for('newRestaurant')}}">
       <input type="text" name="restaurant_name" placeholder="Restaurant Name">
-      <input type="submit" value="Create">
+      <input class="button" type="submit" value="Create">
     </form>
-    <p>
-      <a href="{{url_for('showRestaurants')}}"><input type="button" value="Cancel"></a>
-    </p>
+    <div class="footer">
+      <p>
+        <a href="{{url_for('showRestaurants')}}"><input type="button" class="button" value="&times; CANCEL"></a>
+      </p>
+    </div>
     </div>
   </div>
 </body>

@@ -8,7 +8,7 @@
   <meta name="description" content="Menu App">
   <meta name="author" content="Terence Fox">
 
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/styles.css') }}">
 
   <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
@@ -20,7 +20,7 @@
   <div class="container">
     <div>
     <h1>Edit Menu Item</h1>
-    <form method="POST" action="{{url_for('editMenuItem', restaurant_id=restaurant_id, menu_id = menu_id, item=item)}}">
+    <form class="menu_field" method="POST" action="{{url_for('editMenuItem', restaurant_id=restaurant_id, menu_id = menu_id, item=item)}}">
       <input type="text" name="name" maxlength="80" placeholder="{{item.name}}">
       <input type="text" name="description" maxlength="250" placeholder="{{item.description}}">
       <input type="text" name="price" maxlength="8" placeholder="{{item.price}}">
@@ -30,11 +30,9 @@
         <option value="Dessert"{% if item.course == 'Dessert' %} selected {% endif%}>Dessert</option>
         <option value="Beverage"{% if item.course == 'Beverage' %} selected {% endif%}>Beverage</option>
       </select>
-      <input type="submit" value="Edit">
+      <input class="button" type="submit" value="EDIT">
+      <a href="{{url_for('showMenu',restaurant_id=restaurant_id)}}"><input class="button" type="button" value="&times; CANCEL"></a>
     </form>
-    <p>
-      <a href="{{url_for('showMenu',restaurant_id=restaurant_id)}}"><input type="button" value="Cancel"></a>
-    </p>
     </div>
   </div>
 </body>
