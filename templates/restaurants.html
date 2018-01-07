@@ -20,21 +20,28 @@
   <div class="container">
     <div>
       <h1>Restaurants</h1>
-      <p>Message flashing goes here</p>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+          <p>{{message}}</p>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
     </div>
-    {% if restaurants == [] %}
+
     <div>
-      <p>There are no restaurants stored.</p>
+        {% if restaurants == [] %}
+          <p>There are no restaurants stored.</p>
+        {% else %}
+          {% for i in restaurants %}
+          <p>
+            <a href="{{url_for('showMenu', restaurant_id = i.id)}}"><h3>{{i.name}}</h3></a>
+          </p>
+          {% endfor %}
+        {% endif %}
+
     </div>
-    {% else %}
-    <div>
-      {% for i in restaurants %}
-      <p>
-        <a href="{{url_for('showMenu', restaurant_id = i.id)}}"><h3>{{i.name}}</h3></a>
-      </p>
-      {% endfor %}
-    </div>
-    {% endif %}
+
     <div class="footer">
       <a href="{{url_for('newRestaurant')}}"><button class="button">Create New</button></a>
     </div>
