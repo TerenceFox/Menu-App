@@ -4,7 +4,7 @@
   },
   "uploadOnSave": true,
   "useAtomicWrites": false,
-  "deleteLocal": false,
+  "deleteLocal": true,
   "port": "22",
   "target": "/home/media/menu",
   "ignore": [
