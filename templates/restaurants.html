@@ -30,14 +30,14 @@
     </div>
 
     <div>
-        {% if restaurants == [] %}
-          <p>There are no restaurants stored.</p>
-        {% else %}
+        {% if restaurants %}
           {% for i in restaurants %}
           <p>
             <a href="{{url_for('showMenu', restaurant_id = i.id)}}"><h3>{{i.name}}</h3></a>
           </p>
           {% endfor %}
+        {% else %}
+          <p> There are no restaurants stored.</p>
         {% endif %}
 
     </div>

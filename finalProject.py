@@ -32,7 +32,6 @@ def menuItemJSON(restaurant_id, menu_id):
 @app.route('/restaurants')
 def showRestaurants():
     restaurants = session.query(Restaurant).all()
-    print(restaurants)
     return render_template('restaurants.html', restaurants=restaurants)
 
 
