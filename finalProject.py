@@ -5,38 +5,41 @@ app = Flask(__name__)
 
 import random, string, json, httplib2, requests
 
-from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import FlowExchangeError
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem
+from database_setup import Base, Restaurant, MenuItem, User
 
 
+CLIENT_SECRET_FILE = 'client_secret.json'
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+    open('client_secret.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
-
 # Connect to Database and create database session
-engine = create_engine('sqlite:///restaurant.db')
+engine = create_engine('sqlite:///restaurantmenuwithusers.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-# Create anti-forgery state token
+# Login page with Google Sign-in
 @app.route('/login')
 def showLogin():
+    #Flow-1 State is created upon visiting login page
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
+    #Flow-2 Saved in Flask session object
     login_session['state'] = state
-    # return "The current session state is %s" % login_session['state']
     return render_template('login.html', STATE=state)
 
 
+#Connect user
 @app.route('/gconnect', methods=['POST'])
-def gconnect():
+def gConnect():
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -47,7 +50,7 @@ def gconnect():
 
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets(CLIENT_SECRET_FILE, scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -62,6 +65,7 @@ def gconnect():
            % access_token)
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
+    print result
     # If there was an error in the access token info, abort.
     if result.get('error') is not None:
         response = make_response(json.dumps(result.get('error')), 500)
@@ -70,6 +74,7 @@ def gconnect():
 
     # Verify that the access token is used for the intended user.
     gplus_id = credentials.id_token['sub']
+    print gplus_id
     if result['user_id'] != gplus_id:
         response = make_response(
             json.dumps("Token's user ID doesn't match given user ID."), 401)
@@ -107,6 +112,12 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
+
+
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -114,11 +125,35 @@ def gconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
+    flash("you are now logged in as {}".format(login_session['username']))
     print "done!"
     return output
 
 
+# User Helper Functions
+def createUser(login_session):
+    newUser = User(name=login_session['username'], email=login_session[
+                   'email'], picture=login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
+#Disconnect User
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session.get('access_token')
@@ -183,7 +218,10 @@ def newRestaurant():
     if 'username' not in login_session:
         return redirect(url_for('showLogin'))
     if request.method == 'POST':
-        newRestaurant = Restaurant(name = request.form['restaurant_name'])
+        newRestaurant = Restaurant(
+        name = request.form['restaurant_name'],
+        user_id = login_session['user_id']
+        )
         session.add(newRestaurant)
         session.commit()
         flash('New restaurant created.')
@@ -230,7 +268,14 @@ def deleteRestaurant(restaurant_id):
 def showMenu(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
     items = session.query(MenuItem).filter_by(restaurant_id = restaurant_id).all()
-    return render_template('menu.html', restaurant=restaurant, items=items)
+    creator = getUserInfo(restaurant.user_id)
+    print creator.name
+    print creator.picture
+    if 'email' not in login_session:
+        return render_template(
+        'publicmenu.html',
+        restaurant=restaurant, items=items, creator=creator)
+    return render_template('menu.html', restaurant=restaurant, items=items, creator=creator)
 
 
 # Create a new menu item
@@ -240,11 +285,12 @@ def newMenuItem(restaurant_id):
         return redirect(url_for('showLogin'))
     if request.method == 'POST':
         newItem = MenuItem(
-        name = request.form['name'],\
-        description = request.form['description'],\
-        price = request.form['price'],\
-        course = request.form['course'],\
-        restaurant_id = restaurant_id\
+        name = request.form['name'],
+        description = request.form['description'],
+        price = request.form['price'],
+        course = request.form['course'],
+        restaurant_id = restaurant_id,
+        user_id = login_session['user_id'],
         )
         session.add(newItem)
         session.commit()

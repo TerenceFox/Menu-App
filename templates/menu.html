@@ -16,20 +16,27 @@
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>{{restaurant.name}}</h1>
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-          <p>{{message}}</p>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-      <div class='edit_button_group'>
-        <input class="edit_button button" type="button" onclick="window.location.href='{{url_for('editRestaurant', restaurant_id=restaurant.id)}}'">
-        <input class=" delete_button button" type="button" onclick="window.location.href='{{url_for('deleteRestaurant', restaurant_id=restaurant.id)}}'">
-      </div>
+  <div class="header">
+    <div class="user_info">
+      <img class ="profile_pic" src="{{creator.picture}}">
+      {{creator.name}}
     </div>
+    <div class="title">
+    <h1>{{restaurant.name}}</h1>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+        <p>{{message}}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    </div>
+    <div class='edit_button_group'>
+      <input class="edit_button button" type="button" onclick="window.location.href='{{url_for('editRestaurant', restaurant_id=restaurant.id)}}'">
+      <input class=" delete_button button" type="button" onclick="window.location.href='{{url_for('deleteRestaurant', restaurant_id=restaurant.id)}}'">
+    </div>
+
+  </div>
 
     {% if items %}
     {% for i in items %}

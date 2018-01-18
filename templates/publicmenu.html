@@ -1,0 +1,55 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Restaurant Menu Application for Udacity FSND</title>
+  <meta name="description" content="Menu App">
+  <meta name="author" content="Terence Fox">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/styles.css') }}">
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="user_info">
+        <img class ="profile_pic" src="{{creator.picture}}">
+        {{creator.name}}
+      </div>
+      <div class="title">
+      <h1>{{restaurant.name}}</h1>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+          <p>{{message}}</p>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      </div>
+    </div>
+
+    {% if items %}
+    {% for i in items %}
+      <div class="menu_item">
+        <h2>{{i.name}}</h2>
+        <hr>
+        <ul>
+          <li>{{i.course}}</li>
+          <li>{{i.description}}</li>
+          <li>{{i.price}}</li>
+        </ul>
+      </div>
+    {% endfor %}
+    {% else %}
+    <div>
+      <p>There are no menu items.</p>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>

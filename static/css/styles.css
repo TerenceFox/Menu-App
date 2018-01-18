@@ -21,7 +21,36 @@
     background-color: #37424B;
     border-radius: 5px;
 }
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: left;
+}
+.header > .user_info {
+  display: inline-flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-self: center;
+  align-items: center;
+  height: inherit;
+  width: 25%;
+}
 
+.title {
+  display: inline-flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-self: flex-start;
+  align-items: center;
+  height: inherit;
+  width: 75%;
+}
+
+
+.profile_pic {
+  height: 100px;
+  width: 100px;
+}
 .footer {
   display: flex;
   justify-content: center;
@@ -87,8 +116,9 @@ h1, h2 {
 }
 
 h1 {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
+  text-align: center;
 }
 
 ul {
@@ -119,6 +149,7 @@ ul {
 .edit_button_group {
   display: flex;
   justify-content: flex-end;
+  align-self: flex-end;
   align-items: baseline;
 }
 
