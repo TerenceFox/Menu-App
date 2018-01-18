@@ -19,7 +19,6 @@
     align-items: center;
     color: #ADC8D3;
     background-color: #37424B;
-    border-radius: 5px;
 }
 .header {
   display: flex;
@@ -53,6 +52,7 @@
 }
 .footer {
   display: flex;
+  width: 100%;
   justify-content: center;
 }
 
